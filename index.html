@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mentoreo EMCS 2026</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#0f1117;font-family:'DM Sans',sans-serif;}
+    select,input,textarea,button{font-family:'DM Sans',sans-serif;}
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+const MENTOR_PASSWORD = “mentor2026”;
+const API_URL = “https://script.google.com/macros/s/AKfycbxV70mKZt5wsvbWkouTM9IK93DM80bzyl2O-X8MIblc5iq-DGOLULmjhWiZNx3KF3Nn5A/exec”;
+
+const ASSIGNMENTS = [
+{ mentor: “Miguel Ángel Larriva Cerda”, resident: “Lizeth Patricia Trujillo Salas”, grade: “R4” },
+{ mentor: “Miguel Ángel Larriva Cerda”, resident: “Susana Sarahí Medina Morales”, grade: “R4” },
+{ mentor: “Miguel Ángel Larriva Cerda”, resident: “María Inés Torres Leal”, grade: “R3” },
+{ mentor: “Miguel Ángel Larriva Cerda”, resident: “Liny Escalante Sauri”, grade: “R1” },
+{ mentor: “Francisco Israel Moreno Ríos”, resident: “Selena Jocelyn Espinoza Parra”, grade: “R4” },
+{ mentor: “Francisco Israel Moreno Ríos”, resident: “Eduardo Morado Arteaga”, grade: “R3” },
+{ mentor: “Francisco Israel Moreno Ríos”, resident: “Fabiola Elizabeth Elizondo García”, grade: “R2” },
+{ mentor: “Francisco Israel Moreno Ríos”, resident: “Palmira Idalia Cusi Ramírez”, grade: “R2” },
+{ mentor: “César Alejandro Martínez de los Santos”, resident: “Isaac Careaga Cedillo”, grade: “R4” },
+{ mentor: “César Alejandro Martínez de los Santos”, resident: “Ana Sofía Saucedo Villarreal”, grade: “R2” },
+{ mentor: “César Alejandro Martínez de los Santos”, resident: “Karen Ailyn Salas Ramírez”, grade: “R1” },
+{ mentor: “Sergio Asdrúbal Arsiniega Loera”, resident: “Daniela Alejandra Sánchez Solano”, grade: “R3” },
+{ mentor: “Sergio Asdrúbal Arsiniega Loera”, resident: “Diana Lizeth Pérez Saldívar”, grade: “R3” },
+{ mentor: “Sergio Asdrúbal Arsiniega Loera”, resident: “José Luis Medellín Mena”, grade: “R2” },
+{ mentor: “Rosa Ixchel Palma Soto”, resident: “Mariana Julia Crespo Yapur”, grade: “R4” },
+{ mentor: “Rosa Ixchel Palma Soto”, resident: “Edith Arely Martínez Espinoza”, grade: “R3” },
+{ mentor: “Rosa Ixchel Palma Soto”, resident: “Camila Iturbe Hernández”, grade: “R2” },
+{ mentor: “Sheila Meylin Medina Pique”, resident: “Silvia Ascencio Martínez”, grade: “R4” },
+{ mentor: “Sheila Meylin Medina Pique”, resident: “Karla Cecilia González Huerta”, grade: “R2” },
+{ mentor: “Sheila Meylin Medina Pique”, resident: “Ángela Isabel Treviño Acuña”, grade: “R2” },
+{ mentor: “Ángel Antonio Sarabia Collazo”, resident: “Andrea Alejandra Charles Silva”, grade: “R1” },
+{ mentor: “Ángel Antonio Sarabia Collazo”, resident: “Ana Fernanda Sepúlveda Caballero”, grade: “R1” },
+{ mentor: “Ángel Antonio Sarabia Collazo”, resident: “Ana Paula Pérez Villarreal”, grade: “R1” },
+{ mentor: “Andrea Reyes Gutiérrez”, resident: “Eduardo Alejandro Vargas Rodríguez”, grade: “R4” },
+{ mentor: “Andrea Reyes Gutiérrez”, resident: “Mauricio González Esquivel”, grade: “R3” },
+{ mentor: “Andrea Reyes Gutiérrez”, resident: “Marcela Gutiérrez López”, grade: “R2” },
+{ mentor: “Sergio Esquivel Martínez”, resident: “Andrea Delgado Rangel”, grade: “R4” },
+{ mentor: “Elena Calvillo Valadez”, resident: “Susana Castillo Espinosa”, grade: “R4” },
+{ mentor: “Elena Calvillo Valadez”, resident: “Gabriela Cepeda Castro”, grade: “R4” },
+{ mentor: “Elena Calvillo Valadez”, resident: “Karla Eugenia Sepúlveda Leal”, grade: “R3” },
+{ mentor: “Elena Calvillo Valadez”, resident: “Emilie Gómez Fuentes”, grade: “R2” },
+{ mentor: “José Abraham Fabela Barragán”, resident: “Ericka Paulina Prieto Baca”, grade: “R3” },
+{ mentor: “José Abraham Fabela Barragán”, resident: “Saúl Gerardo Silva Paredes”, grade: “R3” },
+{ mentor: “José Abraham Fabela Barragán”, resident: “Carla Verónica Soto Hernández”, grade: “R2” },
+{ mentor: “José Abraham Fabela Barragán”, resident: “Jesús Ángel Sigala Centeno”, grade: “R1” },
+{ mentor: “Daniel Chora de la Garza”, resident: “Ulises Abiel Valtierra Morales”, grade: “R4” },
+{ mentor: “Daniel Chora de la Garza”, resident: “Nadya Johns Salgado”, grade: “R3” },
+{ mentor: “Daniel Chora de la Garza”, resident: “Mario Alberto Álvarez García”, grade: “R2” },
+{ mentor: “Oswaldo Cuauhtémoc Zamudio Mendez”, resident: “Paula Alejandra Velásquez Peñuela”, grade: “R4” },
+{ mentor: “Oswaldo Cuauhtémoc Zamudio Mendez”, resident: “María José González Mercado”, grade: “R2” },
+{ mentor: “Oswaldo Cuauhtémoc Zamudio Mendez”, resident: “Gilberto Javier Cervantes Charles”, grade: “R1” },
+{ mentor: “Rosemberg Albores Figueroa”, resident: “María José Lugo Aldana”, grade: “R3” },
+{ mentor: “Rosemberg Albores Figueroa”, resident: “Samuel García Lara”, grade: “R2” },
+{ mentor: “Rosemberg Albores Figueroa”, resident: “Mariana Maldonado Gutiérrez”, grade: “R1” },
+{ mentor: “Andrés Ulises Santillana Juárez”, resident: “María Fernanda Medel Magdaleno”, grade: “R3” },
+{ mentor: “Andrés Ulises Santillana Juárez”, resident: “Eduardo Villarreal Serrano”, grade: “R1” },
+{ mentor: “Andrés Ulises Santillana Juárez”, resident: “Anna Paola Martínez Vázquez”, grade: “R1” },
+{ mentor: “Luis Carlos Becerra Lio”, resident: “Susan Abigail Segovia Cortez”, grade: “R1” },
+{ mentor: “Luis Carlos Becerra Lio”, resident: “Marcelo Alejandro De la Paz Martínez”, grade: “R1” },
+{ mentor: “Luis Carlos Becerra Lio”, resident: “Ana Luisa Sierra Sosa”, grade: “R1” },
+{ mentor: “Fernando Cantú Flores”, resident: “Jesús Iván Ibarra Gutiérrez”, grade: “R2” },
+{ mentor: “Fernando Cantú Flores”, resident: “Alejandra Martínez Rodríguez”, grade: “R3” },
+{ mentor: “Agustín Méndez de León”, resident: “Guadalupe Ivonne Moreno Ramírez”, grade: “R4” },
+{ mentor: “Jaime Armendariz Salinas”, resident: “Andrea Lizeth Gutiérrez Lara”, grade: “R3” },
+];
+
+const RESIDENTS_SORTED = […ASSIGNMENTS].sort((a,b)=>a.resident.localeCompare(b.resident));
+const MENTORS = […new Set(ASSIGNMENTS.map(a=>a.mentor))].sort();
+const getMentor = r => ASSIGNMENTS.find(a=>a.resident===r)?.mentor||”—”;
+const getGrade = r => ASSIGNMENTS.find(a=>a.resident===r)?.grade||””;
+
+async function apiGet() {
+try {
+const res = await fetch(API_URL);
+const text = await res.text();
+return JSON.parse(text);
+} catch { return {}; }
+}
+
+async function apiPost(data) {
+try {
+await fetch(API_URL, {
+method:“POST”, mode:“no-cors”,
+headers:{“Content-Type”:“application/json”},
+body:JSON.stringify(data)
+});
+} catch(e){console.error(e);}
+}
+
+const {useState, useEffect} = React;
+
+function StatusBadge({s1,s2}) {
+if(!s1) return <span style={{background:“linear-gradient(135deg,#ff4444,#cc0000)”,color:”#fff”,padding:“3px 10px”,borderRadius:“20px”,fontSize:“11px”,fontWeight:“700”}}>SIN SESIÓN</span>;
+if(!s2) return <span style={{background:“linear-gradient(135deg,#ffaa00,#e08800)”,color:”#fff”,padding:“3px 10px”,borderRadius:“20px”,fontSize:“11px”,fontWeight:“700”}}>SESIÓN 1 ✓</span>;
+return <span style={{background:“linear-gradient(135deg,#22c55e,#16a34a)”,color:”#fff”,padding:“3px 10px”,borderRadius:“20px”,fontSize:“11px”,fontWeight:“700”}}>COMPLETO ✓✓</span>;
+}
+
+function cardStyle(s1,s2) {
+if(!s1) return {border:“1.5px solid #ff444466”,background:“rgba(255,68,68,0.07)”};
+if(!s2) return {border:“1.5px solid #ffaa0066”,background:“rgba(255,170,0,0.07)”};
+return {border:“1.5px solid #22c55e66”,background:“rgba(34,197,94,0.07)”};
+}
+
+function Spinner({msg}) {
+return (
+<div style={{display:“flex”,alignItems:“center”,justifyContent:“center”,minHeight:“100vh”,background:”#0f1117”}}>
+<div style={{textAlign:“center”}}>
+<div style={{width:“40px”,height:“40px”,border:“3px solid #2a2d3a”,borderTop:“3px solid #6366f1”,borderRadius:“50%”,margin:“0 auto 16px”,animation:“spin 0.8s linear infinite”}}/>
+<p style={{color:”#6b7280”,fontSize:“13px”}}>{msg||“Cargando…”}</p>
+</div>
+</div>
+);
+}
+
+function ComplianceChart({data}) {
+const mentorStats = MENTORS.map(mentor=>{
+const residents=ASSIGNMENTS.filter(a=>a.mentor===mentor);
+const total=residents.length*2;
+let done=0;
+residents.forEach(a=>{
+const rec=data[a.resident]||{};
+if(rec.session1date) done++;
+if(rec.session2date) done++;
+});
+const pct=total>0?Math.round((done/total)*100):0;
+return {mentor,count:residents.length,total,done,pct};
+}).sort((a,b)=>b.pct-a.pct);
+
+const totalSessions=mentorStats.reduce((s,m)=>s+m.total,0);
+const totalDone=mentorStats.reduce((s,m)=>s+m.done,0);
+const globalPct=totalSessions>0?Math.round((totalDone/totalSessions)*100):0;
+
+const barColor=pct=>pct===0?”#ff4444”:pct<50?”#ff7722”:pct<100?”#ffaa00”:”#22c55e”;
+const shortName=n=>{const p=n.split(” “);return p[0]+” “+p[p.length-1];};
+
+return (
+<div>
+<div style={{background:”#1a1d27”,borderRadius:“16px”,padding:“20px 24px”,marginBottom:“20px”,border:“1px solid #2a2d3a”,display:“flex”,alignItems:“center”,justifyContent:“space-between”,flexWrap:“wrap”,gap:“16px”}}>
+<div>
+<p style={{color:”#9ca3af”,fontSize:“12px”,margin:“0 0 4px”,fontWeight:“600”,textTransform:“uppercase”,letterSpacing:“0.6px”}}>Cumplimiento global</p>
+<p style={{color:”#f0f0f5”,fontSize:“32px”,fontWeight:“800”,margin:0}}>{globalPct}%</p>
+<p style={{color:”#6b7280”,fontSize:“13px”,margin:“4px 0 0”}}>{totalDone} de {totalSessions} sesiones realizadas</p>
+</div>
+<svg width="80" height="80" viewBox="0 0 80 80">
+<circle cx="40" cy="40" r="32" fill="none" stroke="#2a2d3a" strokeWidth="10"/>
+<circle cx=“40” cy=“40” r=“32” fill=“none” stroke={barColor(globalPct)} strokeWidth=“10”
+strokeDasharray={`${2*Math.PI*32*globalPct/100} ${2*Math.PI*32}`}
+strokeLinecap=“round” transform=“rotate(-90 40 40)”/>
+<text x="40" y="45" textAnchor="middle" fill="#f0f0f5" fontSize="14" fontWeight="800">{globalPct}%</text>
+</svg>
+</div>
+<div style={{background:”#1a1d27”,borderRadius:“16px”,padding:“20px 24px”,border:“1px solid #2a2d3a”}}>
+<p style={{color:”#9ca3af”,fontSize:“12px”,margin:“0 0 18px”,fontWeight:“600”,textTransform:“uppercase”,letterSpacing:“0.6px”}}>Por mentor · mayor a menor</p>
+<div style={{display:“flex”,flexDirection:“column”,gap:“14px”}}>
+{mentorStats.map(m=>(
+<div key={m.mentor}>
+<div style={{display:“flex”,justifyContent:“space-between”,alignItems:“center”,marginBottom:“5px”}}>
+<span style={{color:”#e5e7eb”,fontSize:“13px”,fontWeight:“600”}}>{shortName(m.mentor)}</span>
+<div style={{display:“flex”,alignItems:“center”,gap:“10px”}}>
+<span style={{color:”#6b7280”,fontSize:“11px”}}>{m.done}/{m.total}</span>
+<span style={{color:barColor(m.pct),fontSize:“13px”,fontWeight:“800”,minWidth:“38px”,textAlign:“right”}}>{m.pct}%</span>
+</div>
+</div>
+<div style={{height:“10px”,borderRadius:“99px”,background:”#0f1117”,overflow:“hidden”}}>
+<div style={{height:“100%”,width:`${m.pct}%`,borderRadius:“99px”,minWidth:m.pct>0?“8px”:“0”,
+background:m.pct===100?“linear-gradient(90deg,#22c55e,#16a34a)”:m.pct>=50?“linear-gradient(90deg,#ffaa00,#e08800)”:m.pct>0?“linear-gradient(90deg,#ff7722,#cc4400)”:”#ff4444”
+}}/>
+</div>
+<p style={{color:”#4b5563”,fontSize:“10px”,margin:“3px 0 0”}}>{m.count} residente{m.count!==1?“s”:””} · meta: {m.total} sesiones</p>
+</div>
+))}
+</div>
+</div>
+</div>
+);
+}
+
+function ResidentView({data,onSave}) {
+const [name,setName]=useState(””);
+const [step,setStep]=useState(“select”);
+const [actionDone,setActionDone]=useState(””);
+const [notes,setNotes]=useState(””);
+const [saving,setSaving]=useState(false);
+const rec=data[name]||{};
+const s1=!!rec.session1date,s2=!!rec.session2date;
+
+async function confirmSession(n) {
+setSaving(true);
+const today=new Date().toLocaleDateString(“es-MX”);
+await onSave({…data,[name]:{…rec,[`session${n}date`]:today}});
+setSaving(false);
+setActionDone(`Sesión ${n} registrada`);
+setStep(“done”);
+}
+async function sendRequest() {
+setSaving(true);
+const req={date:new Date().toLocaleDateString(“es-MX”),notes:notes.trim()||“Sin notas adicionales”};
+await onSave({…data,[name]:{…rec,requests:[…(rec.requests||[]),req]}});
+setSaving(false);
+setActionDone(“Solicitud enviada”);
+setStep(“done”);
+}
+
+if(saving) return <Spinner msg="Guardando..."/>;
+
+return (
+<div style={{minHeight:“100vh”,background:”#0f1117”,display:“flex”,flexDirection:“column”,alignItems:“center”,justifyContent:“center”,padding:“24px”}}>
+<div style={{width:“100%”,maxWidth:“420px”,background:”#1a1d27”,borderRadius:“20px”,padding:“36px 28px”,boxShadow:“0 20px 60px rgba(0,0,0,0.5)”,border:“1px solid #2a2d3a”}}>
+<div style={{textAlign:“center”,marginBottom:“28px”}}>
+<div style={{width:“56px”,height:“56px”,borderRadius:“16px”,background:“linear-gradient(135deg,#6366f1,#8b5cf6)”,display:“flex”,alignItems:“center”,justifyContent:“center”,margin:“0 auto 16px”,fontSize:“28px”}}>🎓</div>
+<h1 style={{color:”#f0f0f5”,fontSize:“22px”,fontWeight:“700”,margin:0,fontFamily:”‘Space Grotesk’,sans-serif”}}>Mentoreo EMCS</h1>
+<p style={{color:”#6b7280”,fontSize:“13px”,marginTop:“6px”}}>Programa Multicéntrico · 2026–2027</p>
+</div>
+
+```
+    {step==="select"&&<>
+      <label style={{color:"#9ca3af",fontSize:"12px",fontWeight:"600",letterSpacing:"0.8px",textTransform:"uppercase"}}>Selecciona tu nombre</label>
+      <select value={name} onChange={e=>setName(e.target.value)}
+        style={{width:"100%",marginTop:"8px",padding:"12px 14px",background:"#0f1117",border:"1.5px solid #2a2d3a",borderRadius:"10px",color:name?"#f0f0f5":"#6b7280",fontSize:"14px",outline:"none",cursor:"pointer",boxSizing:"border-box"}}>
+        <option value="">— Seleccionar residente —</option>
+        {RESIDENTS_SORTED.map(a=><option key={a.resident} value={a.resident}>{a.resident} ({a.grade})</option>)}
+      </select>
+      <button onClick={()=>name&&setStep("info")} disabled={!name}
+        style={{width:"100%",marginTop:"20px",padding:"14px",background:name?"linear-gradient(135deg,#6366f1,#8b5cf6)":"#2a2d3a",color:name?"#fff":"#4b5563",border:"none",borderRadius:"10px",fontSize:"15px",fontWeight:"700",cursor:name?"pointer":"not-allowed"}}>
+        Continuar →
+      </button>
+    </>}
+
+    {step==="info"&&<>
+      <div style={{background:"#0f1117",borderRadius:"12px",padding:"16px",marginBottom:"20px",border:"1px solid #2a2d3a"}}>
+        <p style={{color:"#9ca3af",fontSize:"11px",margin:"0 0 2px",fontWeight:"600",textTransform:"uppercase",letterSpacing:"0.6px"}}>Residente · {getGrade(name)}</p>
+        <p style={{color:"#f0f0f5",fontSize:"16px",fontWeight:"700",margin:"0 0 6px"}}>{name}</p>
+        <p style={{color:"#6b7280",fontSize:"12px",margin:"0 0 10px"}}>👨‍⚕️ Mentor: <span style={{color:"#9ca3af"}}>{getMentor(name)}</span></p>
+        <StatusBadge s1={s1} s2={s2}/>
+        {rec.session1date&&<p style={{color:"#6b7280",fontSize:"11px",margin:"8px 0 0"}}>Sesión 1: {rec.session1date}</p>}
+        {rec.session2date&&<p style={{color:"#6b7280",fontSize:"11px",margin:"4px 0 0"}}>Sesión 2: {rec.session2date}</p>}
+      </div>
+      <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+        <button onClick={()=>!s1&&confirmSession(1)}
+          style={{padding:"14px",border:"none",borderRadius:"10px",fontSize:"14px",fontWeight:"700",cursor:s1?"not-allowed":"pointer",background:s1?"#2a2d3a":"linear-gradient(135deg,#22c55e,#16a34a)",color:s1?"#4b5563":"#fff"}}>
+          {s1?`✅ Sesión 1 — ${rec.session1date}`:"✅ Confirmar Sesión 1"}
+        </button>
+        <button onClick={()=>s1&&!s2&&confirmSession(2)}
+          style={{padding:"14px",border:"none",borderRadius:"10px",fontSize:"14px",fontWeight:"700",cursor:(!s1||s2)?"not-allowed":"pointer",background:s2?"#2a2d3a":!s1?"#1e2130":"linear-gradient(135deg,#6366f1,#8b5cf6)",color:(!s1||s2)?"#4b5563":"#fff"}}>
+          {s2?`✅ Sesión 2 — ${rec.session2date}`:!s1?"🔒 Sesión 2 (primero registra Sesión 1)":"✅ Confirmar Sesión 2"}
+        </button>
+        <button onClick={()=>setStep("request")}
+          style={{padding:"14px",background:"linear-gradient(135deg,#f59e0b,#d97706)",color:"#fff",border:"none",borderRadius:"10px",fontSize:"14px",fontWeight:"700",cursor:"pointer"}}>
+          📩 Solicitar una sesión
+        </button>
+        <button onClick={()=>{setStep("select");setName("");}}
+          style={{padding:"10px",background:"transparent",color:"#6b7280",border:"1px solid #2a2d3a",borderRadius:"10px",fontSize:"13px",cursor:"pointer"}}>
+          ← Regresar
+        </button>
+      </div>
+    </>}
+
+    {step==="request"&&<>
+      <p style={{color:"#f0f0f5",fontSize:"15px",fontWeight:"600",marginBottom:"14px"}}>Solicitar sesión</p>
+      <label style={{color:"#9ca3af",fontSize:"12px",fontWeight:"600",letterSpacing:"0.8px",textTransform:"uppercase"}}>Notas (opcional)</label>
+      <textarea value={notes} onChange={e=>setNotes(e.target.value)} placeholder="Ej: Disponible martes por la tarde..." rows={3}
+        style={{width:"100%",marginTop:"8px",padding:"12px",background:"#0f1117",border:"1.5px solid #2a2d3a",borderRadius:"10px",color:"#f0f0f5",fontSize:"13px",outline:"none",resize:"none",boxSizing:"border-box",fontFamily:"inherit"}}/>
+      <div style={{display:"flex",gap:"10px",marginTop:"16px"}}>
+        <button onClick={()=>setStep("info")} style={{flex:1,padding:"12px",background:"transparent",color:"#6b7280",border:"1px solid #2a2d3a",borderRadius:"10px",fontSize:"13px",cursor:"pointer"}}>← Regresar</button>
+        <button onClick={sendRequest} style={{flex:2,padding:"12px",background:"linear-gradient(135deg,#f59e0b,#d97706)",color:"#fff",border:"none",borderRadius:"10px",fontSize:"14px",fontWeight:"700",cursor:"pointer"}}>Enviar solicitud</button>
+      </div>
+    </>}
+
+    {step==="done"&&<div style={{textAlign:"center"}}>
+      <div style={{fontSize:"52px",marginBottom:"16px"}}>{actionDone.includes("Solicitud")?"📩":"✅"}</div>
+      <h2 style={{color:"#f0f0f5",fontSize:"18px",fontWeight:"700",margin:"0 0 8px"}}>¡{actionDone}!</h2>
+      <p style={{color:"#6b7280",fontSize:"13px",marginBottom:"24px"}}>
+        {actionDone.includes("Solicitud")?"Tu mentor recibirá la solicitud.":"Registrado exitosamente."}
+      </p>
+      <button onClick={()=>{setStep("select");setName("");setActionDone("");setNotes("");}}
+        style={{padding:"12px 24px",background:"linear-gradient(135deg,#6366f1,#8b5cf6)",color:"#fff",border:"none",borderRadius:"10px",fontSize:"14px",fontWeight:"700",cursor:"pointer"}}>
+        Volver al inicio
+      </button>
+    </div>}
+  </div>
+  <p style={{color:"#374151",fontSize:"11px",marginTop:"20px"}}>Tecnológico de Monterrey · EMCS · 2026</p>
+</div>
+```
+
+);
+}
+
+function MentorLogin({onLogin}) {
+const [pw,setPw]=useState(””); const [error,setError]=useState(false);
+function tryLogin(){if(pw===MENTOR_PASSWORD)onLogin();else{setError(true);setTimeout(()=>setError(false),1500);}}
+return (
+<div style={{minHeight:“100vh”,background:”#0f1117”,display:“flex”,alignItems:“center”,justifyContent:“center”,padding:“24px”}}>
+<div style={{background:”#1a1d27”,borderRadius:“20px”,padding:“40px 32px”,width:“100%”,maxWidth:“360px”,border:“1px solid #2a2d3a”,boxShadow:“0 20px 60px rgba(0,0,0,0.5)”}}>
+<div style={{textAlign:“center”,marginBottom:“28px”}}>
+<div style={{fontSize:“40px”,marginBottom:“12px”}}>🔒</div>
+<h2 style={{color:”#f0f0f5”,margin:0,fontFamily:”‘Space Grotesk’,sans-serif”}}>Acceso Mentor</h2>
+<p style={{color:”#6b7280”,fontSize:“13px”,marginTop:“6px”}}>Dashboard de seguimiento</p>
+</div>
+<input type=“password” placeholder=“Contraseña” value={pw} onChange={e=>setPw(e.target.value)} onKeyDown={e=>e.key===“Enter”&&tryLogin()}
+style={{width:“100%”,padding:“12px 14px”,background:error?“rgba(255,68,68,0.1)”:”#0f1117”,border:`1.5px solid ${error?"#ff4444":"#2a2d3a"}`,borderRadius:“10px”,color:”#f0f0f5”,fontSize:“15px”,outline:“none”,boxSizing:“border-box”}}/>
+{error&&<p style={{color:”#ff4444”,fontSize:“12px”,marginTop:“6px”}}>Contraseña incorrecta</p>}
+<button onClick={tryLogin} style={{width:“100%”,marginTop:“16px”,padding:“13px”,background:“linear-gradient(135deg,#6366f1,#8b5cf6)”,color:”#fff”,border:“none”,borderRadius:“10px”,fontSize:“15px”,fontWeight:“700”,cursor:“pointer”}}>Entrar</button>
+</div>
+</div>
+);
+}
+
+function MentorDashboard({data,onSave,onLogout}) {
+const [filter,setFilter]=useState(“all”);
+const [mentorFilter,setMentorFilter]=useState(“all”);
+const [search,setSearch]=useState(””);
+const [tab,setTab]=useState(“residents”);
+const [saving,setSaving]=useState(false);
+
+const stats={none:0,one:0,full:0};
+ASSIGNMENTS.forEach(a=>{
+const rec=data[a.resident]||{};
+if(!rec.session1date)stats.none++;
+else if(!rec.session2date)stats.one++;
+else stats.full++;
+});
+
+const allRequests=[];
+ASSIGNMENTS.forEach(a=>{
+(data[a.resident]?.requests||[]).forEach((req,i)=>{
+allRequests.push({name:a.resident,mentor:a.mentor,origIdx:i,…req});
+});
+});
+
+async function clearRequest(resName,origIdx){
+setSaving(true);
+const updated={…data};
+const reqs=[…(updated[resName]?.requests||[])];
+reqs.splice(origIdx,1);
+updated[resName]={…updated[resName],requests:reqs};
+await onSave(updated);
+setSaving(false);
+}
+
+const filtered=ASSIGNMENTS.filter(a=>{
+const rec=data[a.resident]||{};
+const s1=!!rec.session1date,s2=!!rec.session2date;
+const mf=filter===“all”||(filter===“red”&&!s1)||(filter===“yellow”&&s1&&!s2)||(filter===“green”&&s1&&s2);
+const mm=mentorFilter===“all”||a.mentor===mentorFilter;
+const ms=a.resident.toLowerCase().includes(search.toLowerCase());
+return mf&&mm&&ms;
+});
+
+const btn=(active,color)=>({padding:“7px 13px”,borderRadius:“8px”,fontSize:“12px”,fontWeight:“700”,cursor:“pointer”,border:“none”,background:active?color:”#2a2d3a”,color:active?”#fff”:”#9ca3af”});
+
+if(saving) return <Spinner msg="Guardando..."/>;
+
+return (
+<div style={{minHeight:“100vh”,background:”#0f1117”,padding:“20px”}}>
+<div style={{maxWidth:“960px”,margin:“0 auto”}}>
+<div style={{display:“flex”,alignItems:“center”,justifyContent:“space-between”,marginBottom:“20px”,flexWrap:“wrap”,gap:“12px”}}>
+<div>
+<h1 style={{color:”#f0f0f5”,margin:0,fontFamily:”‘Space Grotesk’,sans-serif”,fontSize:“22px”}}>Dashboard Mentoreo 2026–2027</h1>
+<p style={{color:”#6b7280”,fontSize:“12px”,margin:“4px 0 0”}}>Programa Multicéntrico de Anestesiología · EMCS</p>
+</div>
+<button onClick={onLogout} style={{padding:“8px 16px”,background:”#2a2d3a”,color:”#9ca3af”,border:“none”,borderRadius:“8px”,fontSize:“13px”,cursor:“pointer”}}>Cerrar sesión</button>
+</div>
+
+```
+    <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:"12px",marginBottom:"20px"}}>
+      {[{label:"Sin sesión",count:stats.none,color:"#ff4444",emoji:"🔴"},{label:"Sesión 1 ✓",count:stats.one,color:"#ffaa00",emoji:"🟡"},{label:"Completos",count:stats.full,color:"#22c55e",emoji:"🟢"}].map(s=>(
+        <div key={s.label} style={{background:"#1a1d27",borderRadius:"14px",padding:"16px",border:`1.5px solid ${s.color}44`,textAlign:"center"}}>
+          <div style={{fontSize:"26px",fontWeight:"800",color:s.color}}>{s.count}</div>
+          <div style={{color:"#9ca3af",fontSize:"12px",marginTop:"4px"}}>{s.emoji} {s.label}</div>
+        </div>
+      ))}
+    </div>
+
+    <div style={{display:"flex",gap:"8px",marginBottom:"16px",flexWrap:"wrap"}}>
+      <button onClick={()=>setTab("residents")} style={btn(tab==="residents","#6366f1")}>👥 Residentes</button>
+      <button onClick={()=>setTab("chart")} style={btn(tab==="chart","#a855f7")}>📊 Cumplimiento</button>
+      <button onClick={()=>setTab("requests")} style={{...btn(tab==="requests","#f59e0b"),position:"relative"}}>
+        📩 Solicitudes
+        {allRequests.length>0&&<span style={{position:"absolute",top:"-6px",right:"-6px",background:"#ff4444",color:"#fff",borderRadius:"50%",width:"18px",height:"18px",fontSize:"10px",display:"flex",alignItems:"center",justifyContent:"center",fontWeight:"800"}}>{allRequests.length}</span>}
+      </button>
+    </div>
+
+    {tab==="residents"&&<>
+      <div style={{display:"flex",gap:"8px",marginBottom:"10px",flexWrap:"wrap"}}>
+        <button onClick={()=>setFilter("all")} style={btn(filter==="all","#6366f1")}>Todos ({ASSIGNMENTS.length})</button>
+        <button onClick={()=>setFilter("red")} style={btn(filter==="red","#ff4444")}>🔴 Sin sesión ({stats.none})</button>
+        <button onClick={()=>setFilter("yellow")} style={btn(filter==="yellow","#ffaa00")}>🟡 Sesión 1 ({stats.one})</button>
+        <button onClick={()=>setFilter("green")} style={btn(filter==="green","#22c55e")}>🟢 Completos ({stats.full})</button>
+      </div>
+      <select value={mentorFilter} onChange={e=>setMentorFilter(e.target.value)}
+        style={{width:"100%",padding:"10px 14px",marginBottom:"10px",background:"#1a1d27",border:"1.5px solid #2a2d3a",borderRadius:"10px",color:"#f0f0f5",fontSize:"13px",outline:"none",boxSizing:"border-box"}}>
+        <option value="all">— Todos los mentores —</option>
+        {MENTORS.map(m=><option key={m} value={m}>{m}</option>)}
+      </select>
+      <input placeholder="🔍 Buscar residente..." value={search} onChange={e=>setSearch(e.target.value)}
+        style={{width:"100%",padding:"10px 14px",marginBottom:"16px",background:"#1a1d27",border:"1.5px solid #2a2d3a",borderRadius:"10px",color:"#f0f0f5",fontSize:"14px",outline:"none",boxSizing:"border-box"}}/>
+      <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))",gap:"10px"}}>
+        {filtered.map(a=>{
+          const rec=data[a.resident]||{};
+          const s1=!!rec.session1date,s2=!!rec.session2date;
+          const reqs=rec.requests?.length||0;
+          return (
+            <div key={a.resident} style={{borderRadius:"12px",padding:"14px 16px",...cardStyle(s1,s2)}}>
+              <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:"6px"}}>
+                <div>
+                  <span style={{color:"#f0f0f5",fontSize:"13px",fontWeight:"600"}}>{a.resident}</span>
+                  <span style={{color:"#6b7280",fontSize:"11px",marginLeft:"6px"}}>{a.grade}</span>
+                </div>
+                <StatusBadge s1={s1} s2={s2}/>
+              </div>
+              <p style={{color:"#6b7280",fontSize:"11px",margin:"0 0 4px"}}>👨‍⚕️ {a.mentor}</p>
+              {rec.session1date&&<p style={{color:"#9ca3af",fontSize:"11px",margin:"2px 0"}}>S1: {rec.session1date}</p>}
+              {rec.session2date&&<p style={{color:"#9ca3af",fontSize:"11px",margin:"2px 0"}}>S2: {rec.session2date}</p>}
+              {reqs>0&&<p style={{color:"#f59e0b",fontSize:"11px",fontWeight:"600",margin:"4px 0 0"}}>📩 {reqs} solicitud{reqs>1?"es":""} pendiente{reqs>1?"s":""}</p>}
+            </div>
+          );
+        })}
+      </div>
+    </>}
+
+    {tab==="chart"&&<ComplianceChart data={data}/>}
+
+    {tab==="requests"&&(
+      <div style={{display:"flex",flexDirection:"column",gap:"10px"}}>
+        {allRequests.length===0
+          ?<div style={{textAlign:"center",color:"#6b7280",padding:"40px",background:"#1a1d27",borderRadius:"14px"}}>No hay solicitudes pendientes</div>
+          :allRequests.map((req,i)=>(
+            <div key={i} style={{background:"#1a1d27",borderRadius:"12px",padding:"16px",border:"1.5px solid #f59e0b44",display:"flex",justifyContent:"space-between",alignItems:"flex-start",gap:"12px"}}>
+              <div>
+                <p style={{color:"#f0f0f5",fontWeight:"700",margin:"0 0 2px"}}>{req.name}</p>
+                <p style={{color:"#6b7280",fontSize:"12px",margin:"0 0 2px"}}>👨‍⚕️ {req.mentor}</p>
+                <p style={{color:"#9ca3af",fontSize:"12px",margin:"0 0 2px"}}>📅 {req.date}</p>
+                <p style={{color:"#6b7280",fontSize:"12px",margin:0}}>{req.notes}</p>
+              </div>
+              <button onClick={()=>clearRequest(req.name,req.origIdx)}
+                style={{padding:"6px 12px",background:"#2a2d3a",color:"#9ca3af",border:"none",borderRadius:"8px",fontSize:"12px",cursor:"pointer",whiteSpace:"nowrap"}}>
+                ✓ Atendida
+              </button>
+            </div>
+          ))
+        }
+      </div>
+    )}
+  </div>
+</div>
+```
+
+);
+}
+
+function App() {
+const [view,setView]=useState(“home”);
+const [mentorAuthed,setMentorAuthed]=useState(false);
+const [data,setData]=useState(null);
+
+useEffect(()=>{apiGet().then(d=>setData(d||{}));},[]);
+
+async function saveData(updated){
+setData(updated);
+await apiPost(updated);
+}
+
+if(data===null) return <Spinner msg="Cargando datos..."/>;
+if(view===“resident”) return <ResidentView data={data} onSave={saveData}/>;
+if(view===“mentorLogin”&&!mentorAuthed) return <MentorLogin onLogin={()=>{setMentorAuthed(true);setView(“mentor”);}}/>;
+if(view===“mentor”&&mentorAuthed) return <MentorDashboard data={data} onSave={saveData} onLogout={()=>{setMentorAuthed(false);setView(“home”);}}/>;
+
+return (
+<div style={{minHeight:“100vh”,background:”#0f1117”,display:“flex”,flexDirection:“column”,alignItems:“center”,justifyContent:“center”,padding:“24px”}}>
+<div style={{background:”#1a1d27”,borderRadius:“24px”,padding:“44px 32px”,width:“100%”,maxWidth:“380px”,border:“1px solid #2a2d3a”,boxShadow:“0 24px 64px rgba(0,0,0,0.6)”,textAlign:“center”}}>
+<div style={{width:“64px”,height:“64px”,borderRadius:“18px”,background:“linear-gradient(135deg,#6366f1,#8b5cf6)”,display:“flex”,alignItems:“center”,justifyContent:“center”,margin:“0 auto 20px”,fontSize:“32px”}}>🎓</div>
+<h1 style={{color:”#f0f0f5”,margin:“0 0 6px”,fontFamily:”‘Space Grotesk’,sans-serif”,fontSize:“24px”}}>Mentoreo EMCS</h1>
+<p style={{color:”#6b7280”,fontSize:“13px”,margin:“0 0 4px”}}>Programa Multicéntrico de Anestesiología</p>
+<p style={{color:”#4b5563”,fontSize:“12px”,margin:“0 0 32px”}}>2026 – 2027</p>
+<div style={{display:“flex”,flexDirection:“column”,gap:“12px”}}>
+<button onClick={()=>setView(“resident”)} style={{padding:“16px”,background:“linear-gradient(135deg,#6366f1,#8b5cf6)”,color:”#fff”,border:“none”,borderRadius:“12px”,fontSize:“15px”,fontWeight:“700”,cursor:“pointer”}}>
+👩‍⚕️ Soy residente
+</button>
+<button onClick={()=>setView(“mentorLogin”)} style={{padding:“16px”,background:”#1e2130”,color:”#9ca3af”,border:“1.5px solid #2a2d3a”,borderRadius:“12px”,fontSize:“15px”,fontWeight:“700”,cursor:“pointer”}}>
+🔒 Acceso mentor
+</button>
+</div>
+</div>
+<p style={{color:”#374151”,fontSize:“11px”,marginTop:“20px”}}>© 2026 · EMCS · Tecnológico de Monterrey</p>
+</div>
+);
+}
+
+ReactDOM.createRoot(document.getElementById(“root”)).render(<App/>);
+</script>
+
+</body>
+</html>
